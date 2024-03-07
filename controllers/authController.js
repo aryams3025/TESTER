@@ -155,34 +155,89 @@ module.exports={
     },
 
     //resending otp
-    resendOtp : async(req,res)=>{
-        try{
-            let email = req.session.unVerifiedMail
-            const otp = verificationController.sendMail(email)
-            await userSchema.updateOne({email:email},{$set:{
-                token : {
-                    otp : otp ,
-                    generatedTime : new Date()
-                }
-            }})
-        }catch(error){
+    // resendOtp : async(req,res)=>{
+    //     try{
+    //         let email = req.session.unVerifiedMail
+    //         const otp = verificationController.sendMail(email)
+    //         await userSchema.updateOne({email:email},{$set:{
+    //             token : {
+    //                 otp : otp ,
+    //                 generatedTime : new Date()
+    //             }
+    //         }})
+    //     }catch(error){
+    //         console.log(error);
+    //     }
+    // },
+    // forgotresendOtp : async(req,res)=>{
+    //     try{
+    //         let email = req.session.unVerifiedMail
+    //         const otp = verificationController.sendMail(email)
+    //         await userSchema.updateOne({email: email},{$set:{
+    //             token :{
+    //                 otp : otp,
+    //                 generatedTime : new Date()
+    //             }
+    //         }})
+    //     }catch(error){
+    //         console.log(error);
+    //     }
+    // },
+
+
+
+    resendOtp: async (req, res) => {
+        try {
+            let email = req.session.unVerifiedMail;
+            const otp = verificationController.sendMail(email);
+    
+            // Retrieve the current token details from the database
+            const user = await userSchema.findOne({ email: email });
+            let token = user.token || {};
+    
+            // Update the OTP and generated time in the token
+            token.otp = otp;
+            token.generatedTime = new Date();
+    
+            // Update the user's record with the modified token
+            await userSchema.updateOne({ email: email }, { $set: { token: token } });
+    
+            // Send the OTP via email
+            // (Assuming verificationController.sendMail() handles this)
+    
+            res.status(200).send("OTP resent successfully.");
+        } catch (error) {
             console.log(error);
+            res.status(500).send("Internal Server Error.");
         }
     },
-    forgotresendOtp : async(req,res)=>{
-        try{
-            let email = req.session.unVerifiedMail
-            const otp = verificationController.sendMail(email)
-            await userSchema.updateOne({email: email},{$set:{
-                token :{
-                    otp : otp,
-                    generatedTime : new Date()
-                }
-            }})
-        }catch(error){
+    
+    forgotresendOtp: async (req, res) => {
+        try {
+            let email = req.session.unVerifiedMail;
+            const otp = verificationController.sendMail(email);
+    
+            // Retrieve the current token details from the database
+            const user = await userSchema.findOne({ email: email });
+            let token = user.token || {};
+    
+            // Update the OTP and generated time in the token
+            token.otp = otp;
+            token.generatedTime = new Date();
+    
+            // Update the user's record with the modified token
+            await userSchema.updateOne({ email: email }, { $set: { token: token } });
+    
+            // Send the OTP via email
+            // (Assuming verificationController.sendMail() handles this)
+    
+            res.status(200).send("OTP resent successfully.");
+        } catch (error) {
             console.log(error);
+            res.status(500).send("Internal Server Error.");
         }
     },
+    
     doUserLogout:(req,res)=>{
         try{
             req.session.user=null

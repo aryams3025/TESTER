@@ -107,6 +107,14 @@
                 Register
               </button>
             </div>
+            <div class="col-md-12 form-group">
+              <button id ="google-auth-button"
+                type="google authentication"
+                value="google authentication"
+                class="google-auth-button w-100">
+                Google Authentication
+              </button>
+            </div>
           </form>
           <p>Already have an account? <a href="/login">Login</a></p>
           <br><br>
@@ -119,6 +127,13 @@
 <!-- Validation 
 =====================================================
 -->
+
+<script>
+  document.getElementById('google-auth-button').addEventListener('click', function() {
+      // Redirect user to Google authentication page
+      window.location.href = '/auth/google';
+  });
+</script>
 
 <script>
 
